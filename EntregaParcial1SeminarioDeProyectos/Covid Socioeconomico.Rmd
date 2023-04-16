@@ -1,0 +1,215 @@
+---
+title: "Aplicación de Machine Learning para predecir los factores más influyentes en muertes por COVID-19 co un enfoque socioeconómico"
+authors: "Luis Murillo, Samuel Macias"
+output: html_document
+date: "2023-03-28"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introducción
+
+El propósito de este proyecto es aplicar algoritmos supervisados y no supervisados de Machine Learning con el fin de predecir los factores más influyentes en muertes por COVID-19. Para este proyecto, vamos a utilizar un enfoque socioeconómico al momento de evaluar los resultados después de haber corrido los algoritmos.
+
+## Preguntas de Investigación
+
+Para este proyecto, estas son las preguntas de investigación que vamos a tratar de responder:
+
+-Algoritmo de aprendizaje supervisado: ¿Cuáles son los factores más influyentes para predecir el deceso en pacientes con Covid -19?
+-Algoritmo de aprendizaje no supervisado: ¿Cuáles son los grupos que se forman con base en las variables seleccionadas?
+
+# Estado del Arte
+
+El enfoque de este proyecto será socioeconómico, por lo que nos interesa saber cuáles son los factores que con más certeza nos permitan predecir el deceso de un paciente con COVID-19. De acuerdo a Hawkins-Charles (2020)[1], el factor con mayor asociación tanto en número de casos como de fatalidades en Estados Unidos es un nivel de educación bajo, con otros factores como la proporción de residentes negros, tasa de pobreza, ingreso medio y cambios constantes de empleo teniendo también una alta asociación. Otro estudio realizado en Escocia muestra que aquellos individuos en grupos socioeconómicos más bajos son mucho más propensos a ser hospitalizados y permanecer por más tiempo en el hospital por Covid-19, aunque las tasas de defunción se mantuvieron constantes en todos los grupos [2]. Este resultado contrasta con lo encontrado en el estudio realizado por Sesé et al. en París, que encontró que las tasas de mortandad más altas se vinculaban a pacientes que vivían en el distrito más pobre de toda la capital francesa [3].
+
+El impacto socioeconómico del Covid-19 va más allá de solo un efecto de mortalidad incrementada para personas en sectores económicos más vulnerables, pues la pandemia resultó en una contracción de la economía global que afectó de manera desporporcionada a países de menor ingreso, reduciendo aún más los ingresos de una gran parte de la población, y volviéndolos aún más susceptibles a una próxima crisis lobal [4].
+
+De acuerdo a Dogan et al., el uso de algoritmos de Machine Learning nos puede proveer de una variedad de soluciones frente a la pandemia de Covid-19 [5].
+
+## Referencias
+
+[1] https://www.sciencedirect.com/science/article/pii/S0033350620304352?casa_token=sEDrmE0f86EAAAAA:iQPZ02nRqFiYdM-kx4aA47oR6wVycRLB11Ams0uMqeFZOzG1_ylbhcvPKqf0odr-v38WJMhKUJI&sub1=20230329-1251-102a-aabf-d2006057a2de
+
+[2] https://onlinelibrary.wiley.com/doi/abs/10.1002/jmv.26371?casa_token=SyrfMvaBdUgAAAAA:O6bN1GlIfx4PBLBGKL0-6dPc1448WTu8Efi9xoa7GKxvejGGSd4Jows_nHfxL5uNyLDGxnXdlBO_91_8&subid1=20230329-1251-34f8-ab7b-9b3cfa8dc4b2
+
+[3] https://erj.ersjournals.com/lens/erj/56/6/2002364
+
+[4] https://www.nature.com/articles/s41562-021-01096-7?subid1=20230329-1250-24d9-812c-d323ee59d04f
+
+[5] https://link.springer.com/article/10.1007/s40747-021-00424-8
+
+# Variables
+
+## Descripción
+
+-SECTOR: Variable característica. Identifica el tipo de institución del Sistema Nacional de Salud que brindó la atención. CATÁLOGO: SECTOR
+
+-ENTIDAD_UM: Variable característica. Identifica la entidad donde se ubica la unidad medica que brindó la atención. CATALÓGO: ENTIDADES
+
+-SEXO: Variable característica. Identifica al sexo del paciente. CATÁLOGO: SEXO                              
+ 
+-ENTIDAD_RES: Variable característica. Identifica la entidad de residencia del paciente. CATALÓGO: ENTIDADES
+
+-TIPO_PACIENTE: Variable característica. Identifica el tipo de atención que recibió el paciente en la unidad. Se denomina como ambulatorio si regresó a su casa o se denomina como hospitalizado si fue ingresado a hospitalización. CATÁLOGO: TIPO_PACIENTE 
+
+-DEFUNCION: Variable objetivo. Identifica si el paciente falleció. CATÁLOGO: SI_NO
+
+-INTUBADO: Variable característica. Identifica si el paciente requirió de intubación. CATÁLOGO: SI_ NO
+
+-NEUMONIA: Variable característica. Identifica si al paciente se le diagnosticó con neumonía. CATÁLOGO: SI_ NO
+
+-EDAD: Variable característica. Identifica la edad del paciente. NÚMERICA EN AÑOS
+
+-EMBARAZO: Variable característica. Identifica si la paciente está embarazada. CATÁLOGO: SI_ NO
+
+-INDIGENA: Variable característica. Identifica si el paciente se autoidentifica como una persona indígena. CATÁLOGO: SI_ NO
+
+-DIABETES: Variable característica. Identifica si el paciente tiene un diagnóstico de diabetes. CATÁLOGO: SI_ NO
+
+-EPOC: Variable característica. Identifica si el paciente tiene un diagnóstico de EPOC. CATÁLOGO: SI_ NO
+
+-ASMA: Variable característica. Identifica si el paciente tiene un diagnóstico de asma. CATÁLOGO: SI_ NO
+
+-INMUSUPR: Variable característica. Identifica si el paciente presenta inmunosupresión. CATÁLOGO: SI_ NO
+
+-HIPERTENSION: Variable característica. Identifica si el paciente tiene un diagnóstico de hipertensión. CATÁLOGO: SI_ NO
+
+-OTRA_COM: Variable característica. Identifica si el paciente tiene diagnóstico de otras enfermedades. CATÁLOGO: SI_ NO
+
+-CARDIOVASCULAR: Variable característica. Identifica si el paciente tiene un diagnóstico de enfermedades cardiovasculares. CATÁLOGO: SI_ NO
+
+-OBESIDAD: Variable característica. Identifica si el paciente tiene diagnóstico de obesidad. CATÁLOGO: SI_ NO
+
+-RENAl_CRONICA: Variable característica. Identifica si el paciente tiene diagnóstico de insuficiencia renal crónica. CATÁLOGO: SI_ NO
+
+-TABAQUISMO: Variable característica. Identifica si el paciente tiene hábito de tabaquismo. CATÁLOGO: SI_ NO
+
+-CLASIFICACION FINAL: Variable característica. Identifica si el paciente es un caso de COVID-19 según el catálogo "CLASIFICACION_FINAL".
+
+-MIGRANTE: Variable característica. Identifica si el paciente es una persona migrante. CATÁLOGO: SI_ NO
+
+-UCI: Variable característica. Identifica si el paciente requirió ingresar a una Unidad de Cuidados Intensivos. CATÁLOGO: SI_ NO
+
+## Catálogos
+
+-SECTOR:
+CLAVE	DESCRIPCIÓN
+1	CRUZ ROJA
+2	DIF
+3	ESTATAL
+4	IMSS
+5	IMSS-BIENESTAR
+6	ISSSTE
+7	MUNICIPAL
+8	PEMEX
+9	PRIVADA
+10	SEDENA
+11	SEMAR
+12	SSA
+13	UNIVERSITARIO
+99	NO ESPECIFICADO
+
+-ENTIDADES:
+CLAVE_ENTIDAD	ENTIDAD_FEDERATIVA	ABREVIATURA
+01	AGUASCALIENTES	AS
+02	BAJA CALIFORNIA	BC
+03	BAJA CALIFORNIA SUR	BS
+04	CAMPECHE	CC
+05	COAHUILA DE ZARAGOZA	CL
+06	COLIMA	CM
+07	CHIAPAS	CS
+08	CHIHUAHUA	CH
+09	CIUDAD DE MÉXICO	DF
+10	DURANGO	DG
+11	GUANAJUATO	GT
+12	GUERRERO	GR
+13	HIDALGO	HG
+14	JALISCO	JC
+15	MÉXICO	MC
+16	MICHOACÁN DE OCAMPO	MN
+17	MORELOS	MS
+18	NAYARIT	NT
+19	NUEVO LEÓN	NL
+20	OAXACA	OC
+21	PUEBLA	PL
+22	QUERÉTARO	QT
+23	QUINTANA ROO	QR
+24	SAN LUIS POTOSÍ	SP
+25	SINALOA	SL
+26	SONORA	SR
+27	TABASCO	TC
+28	TAMAULIPAS	TS
+29	TLAXCALA	TL
+30	VERACRUZ DE IGNACIO DE LA LLAVE	VZ
+31	YUCATÁN	YN
+32	ZACATECAS	ZS
+36	ESTADOS UNIDOS MEXICANOS	EUM
+97	NO APLICA	NA
+98	SE IGNORA	SI
+99	NO ESPECIFICADO	NE
+
+-SEXO:
+CLAVE	DESCRIPCIÓN
+1	MUJER
+2	HOMBRE
+99	NO ESPECIFICADO
+
+-TIPO_PACIENTE:
+CLAVE	DESCRIPCIÓN
+1	AMBULATORIO
+2	HOSPITALIZADO
+99	NO ESPECIFICADO
+
+-SI_NO: 
+CLAVE	DESCRIPCIÓN
+1	SI 
+2	NO 
+97 NO APLICA
+98 SE IGNORA
+99	NO ESPECIFICADO
+
+-CLASIFICACION_FINAL:
+CLAVE	CLASIFICACIÓN	DESCRIPCIÓN
+
+1	CASO DE COVID-19 CONFIRMADO POR ASOCIACIÓN CLÍNICA EPIDEMIOLÓGICA	"Confirmado por asociación. Aplica cuando el caso informó ser contacto de un positivo a COVID-19 (y este se encuentra registrado en el SISVER) y:
+Al caso no se le tomo muestra o la muestra resultó no válida."
+
+2	CASO DE COVID-19 CONFIRMADO POR COMITÉ DE  DICTAMINACIÓN	"Confirmado por dictaminación solo aplica para defunciones bajo las siguientes condiciones: 
+Al caso no se le tomo muestra o sí se tomó muestra, pero la muestra resultó no válida."
+
+3	CASO DE SARS-COV-2  CONFIRMADO	"Confirmado aplica cuando:
+El caso tiene muestra de laboratorio o prueba antigénica y resultó positiva  a SARS-CoV-2, sin importar si el caso tienen asociación clínica epidemiológica."
+
+# Exploración de NA's
+
+```{r Lectura de la base de datos}
+bd <- read.csv("D:/Seminario de Proyectos/datos_abiertos_covid19/bdcurada.csv")
+```
+
+```{r Exploración de NA}
+library(tidyverse)
+
+bd %>%
+  glimpse()
+  is.na(bd)
+```
+
+```{r Gráfico NA}
+#Ahora un gráfico de los NA
+library(visdat)
+vis_miss(bd, warn_large_data = FALSE)
+```
+
+# Gráfico múltiple
+
+Debido al tamaño de la base de datos y los recursos computacionales limitados, solo vamos a explorar algunas variables
+
+```{r Gráfico Múltiple}
+#Finalmente, un gráfico múltiple para explorar relaciones y otras propiedades
+library(GGally)
+ggpairs(bd[c(3,5,7)], cardinality_threshold = 30, aes(alpha = 0.75))
+ggsave("grafico.general.COVID.png", units = c("cm"), width = 200, height = 100, device = png, dpi = 300, plot = last_plot(), limitsize = FALSE)
+```
+
